@@ -48,9 +48,4 @@ func main() {
 	}
 
 	writeStream.Write(reader)
-
-	fmt.Println("Bytes Read: ", writeStream.BytesRead)
-	fmt.Println("Bytes Written: ", writeStream.BytesWritten)
-
-	fmt.Println("Compression Ratio: ", float64(writeStream.BytesWritten)/float64(writeStream.BytesRead))
 }

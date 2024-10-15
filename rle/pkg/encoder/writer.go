@@ -10,12 +10,8 @@ const MAX_BYTE_COUNT = 255
 // aka AAAABAAABBBBBEEECCDD becomes 4A3B3E2C2D
 // Managing the Writer and the Reader is up to the caller.\
 // NOTE: Make sure to close both Reader and Writer!
-// TODO: use uint32 instead, and don't bother encoding sequences that are not too big
 type RleEncoder struct {
 	Writer io.Writer
-
-	BytesWritten uint64
-	BytesRead    uint64
 }
 
 // Write converst the byte stream from the reader into a RLE encoded byte stream.
@@ -35,8 +31,6 @@ func (e *RleEncoder) Write(reader io.Reader) error {
 
 			return err
 		}
-
-		e.BytesRead += uint64(bytesRead)
 
 		for i := 0; i < bytesRead; i++ {
 			currentByte := buffer[i]
@@ -69,12 +63,10 @@ func (e *RleEncoder) Write(reader io.Reader) error {
 
 // flush writes the last byte and its count to the writer.
 func (e *RleEncoder) flush(lastByte byte, lastByteCount uint8) error {
-	bytesWritten, err := e.Writer.Write([]byte{lastByte, lastByteCount})
+	_, err := e.Writer.Write([]byte{lastByte, lastByteCount})
 	if err != nil {
 		return err
 	}
-
-	e.BytesWritten += uint64(bytesWritten)
 
 	return nil
 }
