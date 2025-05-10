@@ -16,7 +16,7 @@ type RleEncoder struct {
 
 // Write converst the byte stream from the reader into a RLE encoded byte stream.
 func (e *RleEncoder) Write(reader io.Reader) error {
-	buffer := make([]byte, 255)
+	buffer := make([]byte, MAX_BYTE_COUNT)
 	var lastByte byte
 	lastByte = 0
 
@@ -32,7 +32,7 @@ func (e *RleEncoder) Write(reader io.Reader) error {
 			return err
 		}
 
-		for i := 0; i < bytesRead; i++ {
+		for i := range bytesRead {
 			currentByte := buffer[i]
 			if currentByte == lastByte && lastByteCount < MAX_BYTE_COUNT {
 				lastByteCount++
